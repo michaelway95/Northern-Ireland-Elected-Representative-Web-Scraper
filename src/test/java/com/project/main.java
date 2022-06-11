@@ -14,8 +14,11 @@ public class main
 {
     public static void main(String[] args)
     {
-        LinkedList<ElectedRep> electedReps = new HoCWebScraper().getNIMPs();
-        electedReps.addAll(new NIAWebScraper().getNIAMLAs());
+        LinkedList<ElectedRep> electedReps = new AAndNBC().getAAndNBCCouncillors();
+        //electedReps.addAll(new HoCWebScraper().getNIMPs());
+        //electedReps.addAll(new NIAWebScraper().getNIAMLAs());
+        //electedReps.addAll(new AAndNBC().getAAndNBCCouncillors());
+
 
         for(int i = 0; i < electedReps.size(); i++)
         {
