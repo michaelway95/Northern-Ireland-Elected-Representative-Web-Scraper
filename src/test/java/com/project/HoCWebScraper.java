@@ -2,268 +2,251 @@ package com.project;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.jsoup.nodes.Element;
 
-import java.io.File;
-import java.time.Duration;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.LinkedList;
-import java.util.List;
+
+import static com.project.jsoupCSSParsingMethods.*;
 
 /**
  * Project: NIRepsWebScrapper
- * Package: com.example.nirepswebscrapper
- * Filename: NIAWebScraper
- * Created by Michael Way on 05/06/2022
- * A class containing executable methods to retrieve the details of all sitting MLAs from the Northern Ireland Assembly
- * Website and return then as a LinkedList of ElectedRep objects.
+ * Package: com.project
+ * Filename: HoCWebScraper
+ * Created by Michael Way on 11/06/2022
+ * A class containing executable methods to retrieve the details of all sitting Northern Ireland MPs from the House of
+ * Commons Website and return then as a LinkedList of ElectedRep objects.
  **/
-public class NIAWebScraper
+public class HoCWebScraper
 {
-    //a repeatable method to return a LinkedList of all MLAs in the Northern Ireland Assembly using Selenium
-    public LinkedList<ElectedRep> getNIAMLAs()
+    //declaring a static constant String to hold the URL of the member's section of the Parliament website
+    final static String URL_START = "https://members.parliament.uk";
+    /*
+    a repeatable method to return a LinkedList of ElectedReps of the Members of Parliament for Constituencies in
+    Northern Ireland
+     */
+    public LinkedList<ElectedRep> getNIMPs()
     {
-        //declaring a constant String for the MLA search page
-        final String NIA_URL = "http://aims.niassembly.gov.uk/mlas/search.aspx";
+        //declaring a constant LinkedList of Strings storing the names of the NI constituencies, calling the getNIConstituencies method
+        final LinkedList<String> CONSTITUENCIES = getNIConstituencies();
 
-        //declaring a headless Firefox WebDriver, with a WebDriverWait of 30 milliseconds
-        WebDriver driver = headlessFirefox();
-        WebDriverWait wait = new WebDriverWait(driver,Duration.ofMillis(30));
+        //declaring a constant LinkedList of Strings storing common preNominals, calling the getPreNominals method
+        final LinkedList<String> preNoms = getPreNominals();
 
-        //declaring a LinkedList of Elected Reps to store the MLAs
-        LinkedList<ElectedRep> mLALinkedList = new LinkedList<>();
+        //declaring constant Strings to hold the URL for the member's search page
+        final String URL_SEARCH = "/members/commons?SearchText=";
 
-        //declaring a LinkedList of Strings to store the individual URLs of the MLA profile pages
-        LinkedList<String> mLAURLs = new LinkedList<>();
+        //declaring a LinkedList of Elected Reps to store the members of parliament
+        LinkedList<ElectedRep> membersOfParliament = new LinkedList<>();
 
-        //try
+        //for loop for the number of constituencies
+        for (String constituency : CONSTITUENCIES)
+        {
+            //try block
+            try
+            {
+                /*
+                concatenate URL_START, URL_SEARCH and the returned String from getURLEnd method with loop number of
+                LinkedList CONSTITUENCIES as an actual parameter
+                 */
+                String url = URL_START + URL_SEARCH + getURLEnd(constituency);
+
+                //creating a Document copy of the webpage using Jsoup
+                final Document webpage = Jsoup.connect(url).timeout(30 * 1000).userAgent("Mozilla").get();
+
+                //for each instance of a member contact card on the webpage
+                for (Element member : webpage.select("a.card.card-member"))
+                {
+                    //String to hold the url of the member's own webpage
+                    final String memberURL = URL_START + member.attr("href");
+
+                    //for each instance of the constituency indicator for the member
+                    for (Element con : member.select("div.indicator.indicator-label"))
+                    {
+                        //if the constituency indicator text matches the constituency being searched for
+                        if (con.text().equals(constituency))
+                        {
+                            //add ElectedRep to membersOfParliament by calling mPFromURL on memberURL and preNoms
+                            membersOfParliament.add(mPFromURL(memberURL, preNoms));
+                        }//if
+                    }//for
+                }//for
+            }//try
+            //catch block
+            catch (Exception e)
+            {
+                //print exception
+                System.out.println(e);
+            }//catch
+        }//for
+
+        //return membersOfParliament LinkedList
+        return membersOfParliament;
+    }//getNIMPs
+
+    //a repeatable method to load a LinkedList of Strings of NI Parliamentary Constituencies from a text file
+    private static LinkedList<String> getNIConstituencies()
+    {
+        //declaring a LinkedList constituencies to hold the String values of the NI constituencies
+        LinkedList<String> constituencies = new LinkedList();
+
+        //try block
         try
         {
-            //open URL on Firefox
-            driver.get(NIA_URL);
+            //declaring a FileReader and a BufferedReader to read in a list of constituencies
+            FileReader fr = new FileReader("constituencies.txt");
+            BufferedReader br = new BufferedReader(fr);
 
-            //declaring a constant WebElement for the first dropDown list found by its xpath
-            final WebElement dropDown1 = wait.until(ExpectedConditions.elementToBeClickable(By.xpath
-                  ("//*[@id=\"ctl00_MainContentPlaceHolder_SelectionDropDownList\"]")));
+            /*
+            declaring an integer to hold the length of the file, and reading it with the Buffered Reader from the
+            header line
+             */
+            int length = Integer.parseInt(br.readLine());
 
-            //creating a constant Select for the dropdown condition of dropDown1
-            final Select drpCondition = new Select(dropDown1);
-
-            //selecting by Visible Text for the word "Constituency"
-            drpCondition.selectByVisibleText("Constituency");
-
-            //declaring a null WebElement to represent the first MLA in a Constituency list.
-            WebElement firstMLAInCon = null;
-
-            //for the number of Constituencies in List
-            for(int i = 0; i < 18; i++)
+            //for loop iterating from 0 to one below the length of the file
+            for(int i = 0; i < length; i++)
             {
-                //declaring a constant WebElement for the second dropDown list found by its xpath
-                final WebElement dropDown2 = wait.until(ExpectedConditions.elementToBeClickable(By.xpath
-                      ("//*[@id=\"ctl00_MainContentPlaceHolder_ConstituencyDropDownList\"]")));
-
-                //creating a constant Select for the dropdown condition of dropDown2
-                final Select drpConstituency = new Select(dropDown2);
-
-                //declaring a constant list of WebElements populated by the list of options in drpConstituency
-                final List<WebElement> Constituencies = drpConstituency.getOptions();
-
-                //select the option stored in List position i by visible text
-                drpConstituency.selectByVisibleText(Constituencies.get(i).getText());
-
-                //if not the first loop
-                if(i > 0)
-                {
-                    //wait until the firstMLA in the last constituency disappears
-                    wait.until(ExpectedConditions.invisibilityOf(firstMLAInCon));
-
-                    //wait until the first MLA in the latest constituency appears
-                    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//*[@id=\"ctl00_MainContentPlaceHolder_UpdatePanel1\"]/main/div/div/div[2]/div/div[1]/div[1]/div/h4/a"))));
-                }//if
-
-                //declaring a constant WebElement mLAs to direct to the list of MLAs by xpath
-                final WebElement mLAs = driver.findElement(By.xpath("//*[@id=\"ctl00_MainContentPlaceHolder_UpdatePanel1\"]/main"));
-
-                //declaring a constant list of WebElements to hold the elements for this constituency's MLAs
-                final List<WebElement> newMLAs = mLAs.findElements(By.tagName("a"));
-
-                //setting the value of the first MLA in the Constituency as the first value in the newMLAs list
-                firstMLAInCon = newMLAs.get(0);
-
-                //for the number of MLAs in a constituency
-                for(int a = 0; a < newMLAs.size(); a++)
-                {
-                    //add the url of the MLA to the mLAURL list
-                    mLAURLs.add(newMLAs.get(a).getAttribute("href"));
-                }//for
+                //reading the next line in the buffered reader and adding to constituencies LinkedList
+                constituencies.add(br.readLine());
             }//for
         }//try
-        catch (Exception e)
+        //catch block
+        catch(Exception e)
         {
             //print out exception
             System.out.println(e);
         }//catch
 
-        //close driver
-        driver.close();
+        //return constituencies LinkedList
+        return constituencies;
+    }//getNIConstituencies
 
-        //for the number of URLs in mLAURls
-        for(int i = 0; i < mLAURLs.size(); i++)
+    //a repeatable method to load a LinkedList of Strings of PreNominal Titles from a text file
+    private static LinkedList<String> getPreNominals()
+    {
+        //declaring a LinkedList constituencies to hold the String values of preNominals
+        LinkedList<String> preNoms = new LinkedList();
+
+        //try block
+        try
         {
-            //call the mLAFromURL method on the mLAURL in position i and add to mLALinkedList
-            mLALinkedList.add(mLAFromURL(mLAURLs.get(i)));
-        }//for
+            //declaring a FileReader and a BufferedReader to read in a list of constituencies
+            FileReader fr = new FileReader("preNoms.txt");
+            BufferedReader br = new BufferedReader(fr);
 
-        //return mLALinkedList
-        return mLALinkedList;
-    }//NIAWebScraper
+            /*
+            declaring an integer to hold the length of the file, and reading it with the Buffered Reader from the
+            header line
+             */
+            int length = Integer.parseInt(br.readLine());
 
-    //a static method to return a headlessFirefox webdriver
-    private static WebDriver headlessFirefox()
+            //for loop iterating from 0 to one below the length of the file
+            for(int i = 0; i < length; i++)
+            {
+                //reading the next line in the buffered reader and adding to preNoms LinkedList
+                preNoms.add(br.readLine());
+            }//for
+        }//try
+        //catch block
+        catch(Exception e)
+        {
+            //print out exception
+            System.out.println(e);
+        }//catch
+
+        //return preNoms LinkedList
+        return preNoms;
+    }//getPreNominals
+
+    //a repeatable method to return the ending of the search field for parliamentary constituencies
+    private static String getURLEnd(String constituencyName)
     {
-        //declaring a File for the Firefox driver
-        File driverLocation = new File("geckodriver.exe");
+        //return the constituency name with spaces replaced with +
+        return constituencyName.replace(" ","+");
+    }//getURLEnd
 
-        //setting the absolute path of the Firefox driver
-        System.setProperty("webdriver.gecko.driver",driverLocation.getAbsolutePath());
-
-        //declaring a FirefoxOptions object
-        FirefoxOptions options = new FirefoxOptions();
-
-        //setting the binary location of the Firefox executable
-        options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
-
-        //passing the argument to headless
-        options.addArguments("--headless");
-
-        //declaring a WebDriver of Firefox type with the Options object fed in as a parameter
-        WebDriver driver = new FirefoxDriver(options);
-
-        //returning the driver
-        return driver;
-    }//headlessFirefox
-
-    //a repeatable method to return an MLA's details as an ElectedRep object from a formal parameter URL using jsoup
-    private ElectedRep mLAFromURL(String mLAURL)
+    //a repeatable method to return an MP's details as an ElectedRep object from a formal parameter URL using jsoup
+    private ElectedRep mPFromURL(String mPURL,LinkedList<String> preNominalTitles)
     {
-        //declaring a tempER Elected Rep to store the details of the MLA
+        //declaring a tempER Elected Rep to store the details of the MP
         ElectedRep tempER = new ElectedRep();
 
-        //declaring constants to hold the job title and elected body title of NIA MLAs
-        final String ELECTED_BODY = "Northern Ireland Assembly";
-        final String JOB_TITLE = "Member of the Legislative Assembly";
+        //declaring constants to hold the job title and elected body title of MPs
+        final String ELECTED_BODY = "House of Commons";
+        final String JOB_TITLE = "Member of Parliament";
 
         //try
         try
         {
-            //declaring a document webpage and taking a copy of the html by connecting to the mLAURL
-            Document webpage = Jsoup.connect(mLAURL).timeout(30*5000).userAgent("Mozilla").get();
+            //declaring a document webpage and taking a copy of the html by connecting to the mPURL
+            Document webpage = Jsoup.connect(mPURL).timeout(30*5000).userAgent("Mozilla").get();
 
-            /*declaring a String to hold the fullNameAndTitle of the ElectedRep, calling the
-             stringFromFirstElementIfExists method on the webpage and css tag
+            /*
+            declaring a String to hold the fullNameAndTitle of the ElectedRep, calling the
+            stringFromFirstElementIfExists method on the webpage and css tag
              */
-            String fullNameAndTitle = stringFromFirstElementIfExists(webpage,
-                  "#ctl00_MainContentPlaceHolder_FullNameLabel");
+            String fullNameAndTitle = stringFromFirstElementIfExists(webpage,"#main-content > " +
+                  "div.container > article > div > div > div > div.heading > h2").replace("Contact ","");
+
+            //for the number of preNominalTitles in the LinkedList
+            for (String preNominalTitle : preNominalTitles)
+            {
+                //if fullNameAndTitle contains the preNominal in index position i
+                if (fullNameAndTitle.contains(preNominalTitle))
+                {
+                    //set tempER preNominal to preNominal in index position i
+                    tempER.setPreNominal(preNominalTitle);
+
+                    //remove preNominal in index position i from fullNameAndTitle and trim
+                    fullNameAndTitle = fullNameAndTitle.replace(preNominalTitle, "").trim();
+                }//if
+            }//for
+
+            //split fullNameAndTitle into a String of arrays splitNameAndTitle
+            String[] splitNameAndTitle = fullNameAndTitle.split(" ");
+
+            //set officialForename and usualForename of tempER to index position 0 of splitNameAndTitle
+            tempER.setOfficialForename(splitNameAndTitle[0]);
+            tempER.setUsualForename(splitNameAndTitle[0]);
+
+            //set officialSurname to last index position of splitNameAndTitle
+            tempER.setOfficialSurname(splitNameAndTitle[splitNameAndTitle.length-1]);
+
+            //call stringFromFirstElementIfExists on CSS selector to set preferred termOfAddress for tempER
+            tempER.setTermOfAddress(stringFromFirstElementIfExists(webpage,"#main-content > div.container > " +
+                  "article > div > div > div > p:nth-child(3) > strong"));
 
             //set the ElectedBody and Title of tempER to their constant values
             tempER.setElectedBody(ELECTED_BODY);
             tempER.setTitle(JOB_TITLE);
 
-            //set tempER preNominal by calling the stringFromFirstElementSiblingIfExists method on webpage and css tag
-            tempER.setPreNominal(stringFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Title)"));
+            //call address1FromCSSSelectedParagraph on CSS selector to intialise all Address 1 details for tempER
+            address1FromCSSSelectedParagraph(webpage, "#main-content > div.container > article > " +
+                  "div > div > div > div.sections > div > div:nth-child(1) > div > div.content > div.info > div > " +
+                  "div > div.col-md-5", tempER);
 
-            /*
-            set tempER officialSurname by calling the stringFromFirstElementSiblingIfExists method on webpage and css
-            tag
-             */
-            tempER.setOfficialSurname(stringFromFirstElementSiblingIfExists(webpage,
-                  "strong:matchesOwn(Official Last Name)"));
+            //call address2FromCSSSelectedParagraph on CSS selector to intialise all Address 2 details for tempER
+            address2FromCSSSelectedParagraph(webpage, "#main-content > div.container > article > div > " +
+                  "div > div > div.sections > div > div:nth-child(2) > div > div.content > div.info > div > div > " +
+                  "div.col-md-5", tempER);
 
-            /*
-            set tempER officialForename by calling the stringFromFirstElementSiblingIfExists method on webpage and css
-            tag
-             */
-            tempER.setOfficialForename(stringFromFirstElementSiblingIfExists(webpage,
-                  "strong:matchesOwn(Official First Name)"));
+            //call attributeFromFirstElementIfExists on label "Phone:" to set phone1
+            tempER.setPhone1(attributeFromFirstElementIfExists(webpage,"span.label:matchesOwn(Phone:)").replace(" ",""));
 
-            /*
-            set tempER usualForename by calling the stringFromFirstElementSiblingIfExists method on webpage and css tag
-             */
-            tempER.setUsualForename(stringFromFirstElementSiblingIfExists(webpage,
-                  "strong:matchesOwn(Usual First Name)"));
+            //call attributeFromLastElementIfExists on label "Phone:" to set phone2
+            tempER.setPhone2(attributeFromLastElementIfExists(webpage,"span.label:matchesOwn(Phone:)").replace(" ",""));
 
-            /*
-            declaring a String array initialisedNamesAndTitle populated with tempER's PreNominal, Surname, Forenames,
-            and a blank space
-             */
-            String[] initialisedNamesAndTitle = new String[]{tempER.getPreNominal(),tempER.getOfficialSurname(),
-                  tempER.getOfficialForename(),tempER.getUsualForename()," "};
 
-            //for the length of intialisedNamesAndTitle
-            for(int i = 0; i < initialisedNamesAndTitle.length; i++)
-            {
-                /*
-                set value of fullNameAndTitle as fullNameAndTitle with the String found in intiailisedNamesAndTitle index
-                position 0 with an empty String
-                 */
-                fullNameAndTitle = fullNameAndTitle.replace(initialisedNamesAndTitle[i],"");
-            }//for
+            //call attributeFromFirstElementIfExists on label "Email:" to set email1
+            tempER.setEmail1(attributeFromFirstElementIfExists(webpage,"span.label:matchesOwn(Email:)").replace(" ",""));
 
-            //if fullNameAndTitle length is greater than zero
-            if(fullNameAndTitle.length() > 0)
-            {
-                //set tempER postNominal to fullNameAndTitle
-                tempER.setPostNominal(fullNameAndTitle);
-            }//if
+            //call attributeFromLastElementIfExists on label "Email:" to set email2
+            tempER.setEmail2(attributeFromLastElementIfExists(webpage,"span.label:matchesOwn(Email:)").replace(" ",""));
 
-            //set tempER party by calling the stringFromFirstElementSiblingIfExists method on webpage and css tag
-            tempER.setParty(stringFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Party:)"));
-
-            /*
-            set tempER electoralArea by calling the stringFromFirstElementSiblingIfExists method on webpage and css tag
-             */
-            tempER.setElectoralArea(stringFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Constituency:)"));
-
-            /*
-            set tempER address 1 details by calling the stringFromFirstElementSiblingIfExists method on webpage and css
-            tag for each aspect of the address
-             */
-            tempER.setAdd1Line1(stringFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Room:)"));
-            tempER.setAdd1Line2(stringFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Address:)"));
-            tempER.setAdd1Line3(stringFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Townland:)"));
-            tempER.setAdd1Line4(stringFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Ward)"));
-            tempER.setAdd1Line5(stringFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Town:)"));
-            tempER.setAdd1Postcode(stringFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Post Code:)"));
-
-            /*
-            set tempER address 2 details by calling the stringFromLastElementSiblingIfExists method on webpage and css
-            tag for each aspect of the address
-             */
-            tempER.setAdd2Line1(stringFromLastElementSiblingIfExists(webpage,"strong:matchesOwn(Address 1:)"));
-            tempER.setAdd2Line2(stringFromLastElementSiblingIfExists(webpage,"strong:matchesOwn(Address 2:)"));
-            tempER.setAdd2Line3(stringFromLastElementSiblingIfExists(webpage,"strong:matchesOwn(Address 3:)"));
-            tempER.setAdd2Line4(stringFromLastElementSiblingIfExists(webpage,"strong:matchesOwn(Townland:)"));
-            tempER.setAdd2Line5(stringFromLastElementSiblingIfExists(webpage,"strong:matchesOwn(Town:)"));
-            tempER.setAdd2Postcode(stringFromLastElementSiblingIfExists(webpage,"strong:matchesOwn(Post Code:)"));
-
-            //set tempER email1 by calling the emailFromFirstElementSiblingIfExists method on webpage and css tag
-            tempER.setEmail1(emailFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Email:)"));
-
-            //set tempER email2 by calling the emailFromLastElementSiblingIfExists method on webpage and css tag
-            tempER.setEmail2(emailFromLastElementSiblingIfExists(webpage,"strong:matchesOwn(Email:)"));
-
-            //set tempER phone1 by calling the stringFromFirstElementSiblingIfExists method on webpage and css tag
-            tempER.setPhone1(stringFromFirstElementSiblingIfExists(webpage,"strong:matchesOwn(Phone:)").replace(" ",""));
-
-            //set tempER phone2 by calling the stringFromLastElementSiblingIfExists method on webpage and css tag
-            tempER.setPhone2(stringFromLastElementSiblingIfExists(webpage,"strong:matchesOwn(Phone:)").replace(" ",""));
+            //call partyAndElectoralAreaFromURL on css selector for "Parliamentary Career" page and tempER
+            partyAndElectoralAreaFromURL(webpage.select("#main-content > div.container > article > " +
+                  "div > div > ul > li:nth-child(2) > a").attr("href"), tempER);
 
             //calling the removeDuplicateAddress, removeDuplicateEmail, and removeDuplicatePhone methods on tempER
             tempER.removeDuplicateAddress();
@@ -279,121 +262,35 @@ public class NIAWebScraper
 
         //return tempER
         return tempER;
-    }//mLAFromURL
+    }//mPFromURL
 
-    //a repeatable method to return a String from a webpage and css selector fed in as formal parameters
-    protected String stringFromFirstElementIfExists(Document webpage, String elementCSS)
+    //a repeatable method to set the party and Electoral Area for a ElectedRep from their "Parliamentary Career" page
+    private void partyAndElectoralAreaFromURL(String pURL, ElectedRep tempRep)
     {
-        //declaring Elements tempElements for each instance of the css selector in the webpage
-        Elements tempElements = webpage.select(elementCSS);
+        //declaring a constant partyEAURL concatenating URL_START and pURL
+        final String partyEAURL = URL_START + pURL;
 
-        //if tempElements is not empty and the text of the first instance does not contain chevron tags
-        if(!tempElements.isEmpty()&&!tempElements.get(0).text().contains("<"))
+        //try block
+        try
         {
-            //return the text of the first instance of tempElements
-            return tempElements.get(0).text();
-        }//if
-        //else
-        else
-        {
-            //return a blank String
-            return "";
-        }//else
-    }//stringFromFirstElementIfExists
+            //declaring a document webpage and taking a copy of the html by connecting to the partyEAURL
+            Document webpage = Jsoup.connect(partyEAURL).timeout(30 * 5000).userAgent("Mozilla").get();
 
-    /*
-    a repeatable method to return a String of the next sibling of an element from a webpage and css selector fed in as
-    formal parameters
-     */
-    protected String stringFromFirstElementSiblingIfExists(Document webpage, String elementCSS)
-    {
-        //declaring Elements tempElements for each instance of the css selector in the webpage
-        Elements tempElements = webpage.select(elementCSS);
+            //calling stringFromFirstElementIfExists on CSS selector to set the Electoral Area of tempRep
+            tempRep.setElectoralArea(stringFromFirstElementIfExists(webpage,"#main-content > " +
+                  "div.container > article > div > div > div > div.sections > div > div > div:nth-child(2) > a > " +
+                  "div > div.content > div.primary-info"));
 
-        //if tempElements is not empty and the text of the next sibling of the first element does not contain chevron tags
-        if(!tempElements.isEmpty()&&!tempElements.get(0).nextSibling().toString().contains("<"))
+            //calling stringFromFirstElementIfExists on CSS selector to set the Party of tempRep
+            tempRep.setParty(stringFromFirstElementIfExists(webpage,"#main-content > div.container > " +
+                  "article > div > div > div > div.sections > div > div > div:nth-child(4) > a > div > div.content > " +
+                  "div"));
+        }//try
+        //catch block
+        catch (Exception e)
         {
-            //return the text of the next sibling of the first element
-            return tempElements.get(0).nextSibling().toString();
-        }//if
-        //else
-        else
-        {
-            //return blank string
-            return "";
-        }//else
-    }//stringFromFirstElementSiblingIfExists
-
-    /*
-    a repeatable method to return a String of the next sibling of the last instance of an element from a webpage and
-    css selector fed in as formal parameters
-     */
-    protected String stringFromLastElementSiblingIfExists(Document webpage, String elementCSS)
-    {
-        //declaring Elements tempElements for each instance of the css selector in the webpage
-        Elements tempElements = webpage.select(elementCSS);
-
-        //if tempElements is not empty and the text of the next sibling of the last element does not contain chevron tags
-        if(!tempElements.isEmpty()&&!tempElements.last().nextSibling().toString().contains("<"))
-        {
-            //return the text of the last sibling of the first element
-            return tempElements.last().nextSibling().toString();
-        }//if
-        //else
-        else
-        {
-            //return blank string
-            return "";
-        }//else
-    }//stringFromLastElementSiblingIfExists
-
-    /*
-    a repeatable method to return an email String from the next sibling of an element from a webpage and css selector
-    fed in as formal parameters
-     */
-    protected String emailFromFirstElementSiblingIfExists(Document webpage, String elementCSS)
-    {
-        //declaring Elements tempElements for each instance of the css selector in the webpage
-        Elements tempElements = webpage.select(elementCSS);
-
-        //if tempElements is not empty and the text of the next sibling of the first element does not contain chevron tags
-        if(!tempElements.isEmpty()&&!tempElements.get(0).nextSibling().attr("href").toString().contains("<"))
-        {
-            //return the text of the next sibling of the first element with "mailto:" strings replaced with blank strings
-            return tempElements.get(0).nextSibling().attr("href").toString().replace("mailto:","");
-        }//if
-        else
-        {
-            //return blank string
-            return "";
-        }//else
-    }//emailFromFirstElementSiblingIfExists
-
-    /*
-    a repeatable method to return an email String from the next sibling of the last instance of an element from a
-    webpage and css selector fed in as formal parameters
-     */
-    protected String emailFromLastElementSiblingIfExists(Document webpage, String elementCSS)
-    {
-        //declaring Elements tempElements for each instance of the css selector in the webpage
-        Elements tempElements = webpage.select(elementCSS);
-
-        /*
-        if tempElements is not empty and the text of the next sibling of the last element does not contain chevron tags
-        and the href attribute of the first and last instance do not match
-         */
-        if(!tempElements.isEmpty()&&!tempElements.last().nextSibling().attr("href").toString().contains("<")&&
-              !tempElements.last().nextSibling().attr("href").toString().equals(tempElements.first().
-                    nextSibling().attr("href").toString()))
-        {
-            //return the text of the next sibling of the last element with "mailto:" strings replaced with blank strings
-            return tempElements.last().nextSibling().attr("href").toString().replace("mailto:","");
-        }//if
-        //else
-        else
-        {
-            //return blank String
-            return "";
-        }//else
-    }//emailFromLastElementSiblingIfExists
-}
+            //print exception e
+            System.out.println(e);
+        }//catch
+    }//partyAndElectoralAreaFromURL
+}//class

@@ -1,31 +1,180 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="NIRepsWebScrapper:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3690309b-ea42-4194-98e4-1a8050cc34dc" name="Changes" comment="" />
+    <list default="true" id="3690309b-ea42-4194-98e4-1a8050cc34dc" name="Changes" comment="Assembly and HoC functioning">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/NIRepsWebScrapper_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/0cea8bdb-7533-45b7-ba56-04b8ea374933-container.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/140e2cc4-c126-49bb-9676-1b0f3a08cc46-result.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/23fb603d-6e53-41c7-baf5-4c1aa7e86529-container.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/33b829e4-008b-473a-b302-b11f87b771e3-attachment.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/4bb23cf3-49ea-4776-ac2a-e692096ec0bb-container.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/59de7eaf-cd8b-40f0-8aa7-2799df812b31-attachment.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/71ea8e6f-f3a7-40d6-9591-13ca99df9e8c-container.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/772f5350-bd46-4ae5-a774-7a3652bc8739-container.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/78bec176-877d-4b01-92d3-afbea30129c8-result.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/84e1d6df-eb65-4d94-8ac0-655a594f23b0-result.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/855eb49a-e174-4220-a646-f04147253101-result.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/94084225-15f5-4208-b8c0-3aac327008e5-container.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/9b7e4a51-9a10-462c-b7b7-7ea98241acdf-container.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/a417105f-fa9e-4716-9dc7-914c07b2ff2e-container.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/ba62c95f-6f6c-4aa1-9078-284f338901e0-container.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/bc558992-6637-4d89-95c9-eec24ff7fc05-result.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/c222b525-6bad-4790-9f61-6a4e7207dab4-result.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/ca50abb4-fb38-46c8-81e6-3738059be2f2-container.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/d3a972f7-5ab9-4735-a047-7e11f82dfa8c-result.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allure-results/e7a97afb-cb5c-44b4-addf-3fec15f958ec-result.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/geckodriver.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/preNoms.txt" beforeDir="false" afterPath="$PROJECT_DIR$/preNoms.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/ElectedRep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/ElectedRep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/HoCWebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/HoCWebScraper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/NIAWebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/NIAWebScraper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/jsoupCSSParsingMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/jsoupCSSParsingMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/main.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="2A9xx5UNmbwQkWb09aU0ddRXSVz" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false"
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/micha/IdeaProjects/NIRepsWebScrapper",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "File.Encoding"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\micha\IdeaProjects\NIRepsWebScrapper\.idea\libraries" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.project" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.main">
+    <configuration name="NIAWebScrapper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.project.NIAWebScrapper" />
+      <module name="NIRepsWebScrapper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.project.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.project.main" />
+      <module name="NIRepsWebScrapper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.project.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainPageTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="NIRepsWebScrapper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.project.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.nirepswebscrapper" />
+      <option name="MAIN_CLASS_NAME" value="com.example.nirepswebscrapper.MainPageTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainPageTest.search" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="NIRepsWebScrapper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.nirepswebscrapper.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.nirepswebscrapper" />
+      <option name="MAIN_CLASS_NAME" value="com.example.nirepswebscrapper.MainPageTest" />
+      <option name="METHOD_NAME" value="search" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="jsoup-1.15.1.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/.idea/libraries/jsoup-1.15.1.jar" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.main" />
+        <item itemvalue="JAR Application.jsoup-1.15.1.jar" />
+        <item itemvalue="Application.NIAWebScrapper" />
+        <item itemvalue="JUnit.MainPageTest.search" />
+        <item itemvalue="JUnit.MainPageTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SeleniumInternalSettingsState">
+    <option name="lastFrameworkName" value="Selenide" />
+    <option name="lastLanguageId" value="JAVA" />
+    <option name="lastUrl" value="https://www.jetbrains.com/" />
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -34,7 +183,13 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1654435849313</updated>
-      <workItem from="1654435850444" duration="1000" />
+      <workItem from="1654435850444" duration="2463000" />
+      <workItem from="1654438417212" duration="42000" />
+      <workItem from="1654438545522" duration="22221000" />
+      <workItem from="1654488030346" duration="7102000" />
+      <workItem from="1654507606498" duration="111000" />
+      <workItem from="1654514791971" duration="406000" />
+      <workItem from="1654942247190" duration="28948000" />
     </task>
     <servers />
   </component>
@@ -51,5 +206,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Assembly and HoC functioning" />
+    <option name="LAST_COMMIT_MESSAGE" value="Assembly and HoC functioning" />
   </component>
 </project>
