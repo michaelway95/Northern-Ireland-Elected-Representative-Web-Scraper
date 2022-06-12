@@ -142,7 +142,7 @@ public class NIA
         options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
 
         //passing the argument to headless
-        options.addArguments("--headless");
+        //options.addArguments("--headless");
 
         //returning FirefoxDriver with options as formal parameter
         return new FirefoxDriver(options);

@@ -12,6 +12,7 @@
     <list default="true" id="3690309b-ea42-4194-98e4-1a8050cc34dc" name="Changes" comment="HoC, NIA, AandN, ACBandC Functioning">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/project/ACBandCBC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/ACBandCBC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/NIA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/NIA.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/project/jsoupCSSParsingMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/jsoupCSSParsingMethods.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -174,7 +175,7 @@
       <workItem from="1654507606498" duration="111000" />
       <workItem from="1654514791971" duration="406000" />
       <workItem from="1654942247190" duration="34483000" />
-      <workItem from="1655042064692" duration="15761000" />
+      <workItem from="1655042064692" duration="25114000" />
     </task>
     <task id="LOCAL-00001" summary="Assembly and HoC functioning">
       <created>1654975702917</created>
@@ -204,7 +205,14 @@
       <option name="project" value="LOCAL" />
       <updated>1655057276917</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="HoC, NIA, AandN, ACBandC Functioning">
+      <created>1655058532735</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1655058532735</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -392,6 +392,8 @@ public class jsoupCSSParsingMethods
 
         Collections.addAll(listAddress,splitAddress);
 
+        listAddress.replaceAll(s -> s.replace(",", "").trim());
+
         if(!postcode.isEmpty())
         {
             listAddress.add(postcode.first().nextSibling().toString());
@@ -441,6 +443,11 @@ public class jsoupCSSParsingMethods
                 {
                     tempRep.setAdd1Line2(listAddress.get(1));
                 }//else
+
+                if(tempRep.getAdd1Line2().equals("Craigavon Civic Centre"))
+                {
+                    tempRep.setAdd1Postcode("BT64 1AL");
+                }//if
             }//case 2
             case 1 ->
             {

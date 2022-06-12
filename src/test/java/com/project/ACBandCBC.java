@@ -175,8 +175,11 @@ public class ACBandCBC
             tempCouncillor.setElectoralArea(dEAURL.substring(dEAURL.indexOf(">")+1)
                   .replace("</a>",""));
 
-            tempCouncillor.setEmail1(councillor.selectFirst("a.mailto-link").selectFirst("span")
-                  .ownText());
+            tempCouncillor.setEmail1(url
+                  .replace("https://www.armaghbanbridgecraigavon.gov.uk/councillors/","")
+                  .replace("councillor-","").replace("alderman-","")
+                  .replace("-",".").replace("/","")
+                  + "@armaghbanbridgecraigavon.gov.uk");
 
             Elements phone = councillor.select("i.fa.fa-phone");
 
