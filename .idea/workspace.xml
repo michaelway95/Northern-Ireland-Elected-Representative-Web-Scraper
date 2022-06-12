@@ -10,9 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3690309b-ea42-4194-98e4-1a8050cc34dc" name="Changes" comment="Assembly and HoC functioning">
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/project/ACBandCBC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/project/AAndNBC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/AAndNBC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/ElectedRep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/ElectedRep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/HoCWebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/HoC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/NIAWebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/NIA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/jsoupCSSParsingMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/jsoupCSSParsingMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,8 +74,8 @@
       <recent name="com.project" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.main">
-    <configuration name="NIAWebScrapper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Application.com.project.main">
+    <configuration name="com.project.NIAWebScrapper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.project.NIAWebScrapper" />
       <module name="NIRepsWebScrapper" />
       <extension name="coverage">
@@ -83,7 +88,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="com.project.main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.project.main" />
       <module name="NIRepsWebScrapper" />
       <extension name="coverage">
@@ -133,9 +138,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.main" />
+        <item itemvalue="Application.com.project.main" />
         <item itemvalue="JAR Application.jsoup-1.15.1.jar" />
-        <item itemvalue="Application.NIAWebScrapper" />
+        <item itemvalue="Application.com.project.NIAWebScrapper" />
         <item itemvalue="JUnit.MainPageTest.search" />
         <item itemvalue="JUnit.MainPageTest" />
       </list>
@@ -161,7 +166,7 @@
       <workItem from="1654507606498" duration="111000" />
       <workItem from="1654514791971" duration="406000" />
       <workItem from="1654942247190" duration="34483000" />
-      <workItem from="1655042064692" duration="1794000" />
+      <workItem from="1655042064692" duration="13290000" />
     </task>
     <task id="LOCAL-00001" summary="Assembly and HoC functioning">
       <created>1654975702917</created>
@@ -170,7 +175,14 @@
       <option name="project" value="LOCAL" />
       <updated>1654975702917</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Assembly and HoC functioning">
+      <created>1655043907212</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1655043907212</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

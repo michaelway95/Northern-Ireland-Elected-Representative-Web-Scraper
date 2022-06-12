@@ -3,6 +3,8 @@ package com.project;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Objects;
 
 /**
@@ -380,5 +382,78 @@ public class jsoupCSSParsingMethods
             }//switch
         }//if
 
+    }//addressFromCSSSelectedParagraph
+
+    public static void address1FromCSSSelectedParagraphWithCommas(Elements address, Elements postcode, ElectedRep tempRep)
+    {
+        String[] splitAddress = address.first().nextSibling().toString().trim().split(", ");
+
+        LinkedList<String> listAddress = new LinkedList<>();
+
+        Collections.addAll(listAddress,splitAddress);
+
+        if(!postcode.isEmpty())
+        {
+            listAddress.add(postcode.first().nextSibling().toString());
+        }//if
+
+        switch (listAddress.size())
+        {
+            case 6 ->
+            {
+                tempRep.setAdd1Line1(listAddress.get(0));
+                tempRep.setAdd1Line2(listAddress.get(1));
+                tempRep.setAdd1Line3(listAddress.get(2));
+                tempRep.setAdd1Line4(listAddress.get(3));
+                tempRep.setAdd1Line5(listAddress.get(4));
+                tempRep.setAdd1Postcode(listAddress.get(5));
+            }//case 6
+            case 5 ->
+            {
+                tempRep.setAdd1Line1(listAddress.get(0));
+                tempRep.setAdd1Line2(listAddress.get(1));
+                tempRep.setAdd1Line3(listAddress.get(2));
+                tempRep.setAdd1Line4(listAddress.get(3));
+                tempRep.setAdd1Postcode(listAddress.get(4));
+            }//case 5
+            case 4 ->
+            {
+                tempRep.setAdd1Line1(listAddress.get(0));
+                tempRep.setAdd1Line2(listAddress.get(1));
+                tempRep.setAdd1Line3(listAddress.get(2));
+                tempRep.setAdd1Postcode(listAddress.get(3));
+            }//case 4
+            case 3 ->
+            {
+                tempRep.setAdd1Line1(listAddress.get(0));
+                tempRep.setAdd1Line2(listAddress.get(1));
+                tempRep.setAdd1Postcode(listAddress.get(2));
+            }//case 3
+            case 2 ->
+            {
+                tempRep.setAdd1Line1(listAddress.get(0));
+
+                if(listAddress.get(1).contains("BT"))
+                {
+                    tempRep.setAdd1Postcode(listAddress.get(1));
+                }//if
+                else
+                {
+                    tempRep.setAdd1Line2(listAddress.get(1));
+                }//else
+            }//case 2
+            case 1 ->
+            {
+                tempRep.setAdd1Postcode(listAddress.get(0).substring(listAddress.get(0).indexOf("BT")));
+                String tempAddress1 = listAddress.get(0).replace(tempRep.getAdd1Postcode(),"").trim();
+                String tempAddress2 = tempAddress1.substring(tempAddress1.indexOf("Room"))+2;
+                tempAddress1.replace(tempAddress2,"");
+                tempRep.setAdd1Line1(tempAddress1);
+            }//case 1
+            default ->
+            {
+
+            }//default
+        }//switch
     }//addressFromCSSSelectedParagraph
 }

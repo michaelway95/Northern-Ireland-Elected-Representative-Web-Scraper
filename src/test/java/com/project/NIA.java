@@ -26,10 +26,10 @@ import static com.project.jsoupCSSParsingMethods.*;
  * A class containing executable methods to retrieve the details of all sitting MLAs from the Northern Ireland Assembly
  * Website and return then as a LinkedList of ElectedRep objects.
  **/
-public class NIAWebScraper
+public class NIA
 {
     //a repeatable method to return a LinkedList of all MLAs in the Northern Ireland Assembly using Selenium
-    public LinkedList<ElectedRep> getNIAMLAs()
+    public LinkedList<ElectedRep> getMLAs()
     {
         //declaring a constant String for the MLA search page
         final String NIA_URL = "http://aims.niassembly.gov.uk/mlas/search.aspx";

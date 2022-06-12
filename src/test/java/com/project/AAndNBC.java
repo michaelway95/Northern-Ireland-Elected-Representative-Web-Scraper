@@ -23,7 +23,7 @@ public class AAndNBC
     /*
     a repeatable method to return a LinkedList of ElectedReps of Councillors of Antrim and Newtownabbey Borough Council
      */
-    public LinkedList<ElectedRep> getAAndNBCCouncillors()
+    public LinkedList<ElectedRep> getCouncillors()
     {
         //declaring a static constant String to hold the URL of the councillor section of the council website
         final String URL = "https://antrimandnewtownabbey.gov.uk/councillors/";

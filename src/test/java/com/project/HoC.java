@@ -18,7 +18,7 @@ import static com.project.jsoupCSSParsingMethods.*;
  * A class containing executable methods to retrieve the details of all sitting Northern Ireland MPs from the House of
  * Commons Website and return then as a LinkedList of ElectedRep objects.
  **/
-public class HoCWebScraper
+public class HoC
 {
     //declaring a static constant String to hold the URL of the member's section of the Parliament website
     final static String URL_START = "https://members.parliament.uk";
@@ -26,7 +26,7 @@ public class HoCWebScraper
     a repeatable method to return a LinkedList of ElectedReps of the Members of Parliament for Constituencies in
     Northern Ireland
      */
-    public LinkedList<ElectedRep> getNIMPs()
+    public LinkedList<ElectedRep> getMPs()
     {
         //declaring a constant LinkedList of Strings storing the names of the NI constituencies, calling the getNIConstituencies method
         final LinkedList<String> CONSTITUENCIES = getNIConstituencies();
