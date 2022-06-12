@@ -446,9 +446,20 @@ public class jsoupCSSParsingMethods
             {
                 tempRep.setAdd1Postcode(listAddress.get(0).substring(listAddress.get(0).indexOf("BT")));
                 String tempAddress1 = listAddress.get(0).replace(tempRep.getAdd1Postcode(),"").trim();
-                String tempAddress2 = tempAddress1.substring(tempAddress1.indexOf("Room"))+2;
-                tempAddress1.replace(tempAddress2,"");
-                tempRep.setAdd1Line1(tempAddress1);
+                String tempAddress2 = tempAddress1.substring(tempAddress1.indexOf("Room")+6);
+                System.out.println(tempAddress2);
+                tempAddress1 = tempAddress1.replace(tempAddress2,"");
+                tempRep.setAdd1Line1(tempAddress1.trim());
+                tempAddress1 = tempAddress2.trim();
+                tempAddress2 = tempAddress1.substring(tempAddress1.indexOf("Centre")+6);
+                tempAddress1 = tempAddress1.replace(tempAddress2,"");
+                tempRep.setAdd1Line2(tempAddress1.trim());
+                tempAddress1 = tempAddress2.trim();
+                tempAddress2 = tempAddress1.substring(tempAddress1.indexOf("Road")+5);
+                tempAddress1 = tempAddress1.replace(tempAddress2,"");
+                tempRep.setAdd1Line3(tempAddress1.trim());
+                tempAddress1 = tempAddress2.trim();
+                tempRep.setAdd1Line4(tempAddress1);
             }//case 1
             default ->
             {
