@@ -4,10 +4,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import static com.project.jsoupCSSParsingMethods.*;
 
@@ -39,154 +38,237 @@ public class AAndNBC
             //creating a Document copy of the webpage using Jsoup
             final Document webpage = Jsoup.connect(URL).timeout(30 * 1000).userAgent("Mozilla").get();
 
+            //declaring Element repList to find the list of councillors
             Element repList = webpage.selectFirst("#form > main");
 
-            for(Element dEA : repList.select("div.wrapper-white"))
+            //for loop for each white wrapper representing all the odd numbered DEAs on the site
+            for(Element dEA : Objects.requireNonNull(repList).select("div.wrapper-white"))
             {
-                final String DEA_NAME = dEA.select("h2.title-main.blue").text().replace("DEA Councillors","").trim();
+                /*
+                declaring a constant string of the DEA name found by selecting the title for the wrapper minus the
+                non-DEA bits of the String
+                 */
+                final String DEA_NAME = dEA.select("h2.title-main.blue").text().replace
+                      (" DEA Councillors","").trim();
 
+                //for each cell containing a councillor's details
                 for(Element councillor: dEA.select("div.cell"))
                 {
+                    //for the Element with the tag p.title
                     for(Element p: councillor.select("p.title"))
                     {
+                        //if p.text is not empty
                         if(p.text().length()>0)
                         {
+                            //declare a temporary ElectedRep, tempCouncillor
                             ElectedRep tempCouncillor = new ElectedRep();
 
+                            //using the setElectedBody and setElectoralArea methods with related constants as parameters
                             tempCouncillor.setElectedBody(COUNCIL);
                             tempCouncillor.setElectoralArea(DEA_NAME);
 
-                            tempCouncillor.setParty(councillor.select("span").text());
+                            //calling the setParty method on the text of the span element of p
+                            tempCouncillor.setParty(p.select("span").text());
 
-                            String[] splitNameAndTitle = councillor.select("p.title").text().replace(tempCouncillor.getParty(),"").trim().split(" ");
+                            //declaring String array for the split value of p.text minus the return of getParty
+                            String[] splitNameAndTitle = p.text().replace(tempCouncillor.getParty(),"")
+                                  .trim().split(" ");
 
+                            //declaring a LinkedList of Strings to hold the name and title
                             LinkedList<String> listNameAndTitle = new LinkedList<>();
 
+                            //calling Collections.addAll to add all values from splitNameAndTitle to listNameAndTitle
                             Collections.addAll(listNameAndTitle,splitNameAndTitle);
 
+                            //temporary solution for postNominal - replace with list of common postNominals
                             while(!(listNameAndTitle.get(listNameAndTitle.size()-1).length() > 3))
                             {
-                                tempCouncillor.setPostNominal(tempCouncillor.getPostNominal() + " " + listNameAndTitle.get(listNameAndTitle.size()-1));
+                                tempCouncillor.setPostNominal(tempCouncillor.getPostNominal() + " " + listNameAndTitle
+                                      .get(listNameAndTitle.size()-1));
 
                                 listNameAndTitle.remove(listNameAndTitle.get(listNameAndTitle.size()-1));
                             }//if
 
+                            //calling setTitle on the first index position of listNameAndTitle
                             tempCouncillor.setTitle(listNameAndTitle.get(0));
 
+                            //calling getTitle to remove title from listNameAndTitle
                             listNameAndTitle.remove(tempCouncillor.getTitle());
 
+                            //calling setOfficialSurname on the last index position of listNameAndTitle
                             tempCouncillor.setOfficialSurname(listNameAndTitle.get(listNameAndTitle.size()-1));
 
+                            //calling getOfficialSurname to remove the surname from listNameAndTitle
                             listNameAndTitle.remove(tempCouncillor.getOfficialSurname());
 
+                            //if listNameAndTitle is greater than 1
                             if(listNameAndTitle.size() > 1)
                             {
-                                String tempForename = "";
+                                //declaring StringBuild tempForename
+                                StringBuilder tempForename = new StringBuilder();
 
-                                for (String s : listNameAndTitle)
+                                //appending value in first index position of listNameAndTitle to tempForename
+                                tempForename.append(listNameAndTitle.get(0));
+
+                                //removing tempForename from listNameAndTitle
+                                listNameAndTitle.remove(tempForename.toString());
+
+                                //for the number of values remaining in listNameAndTitle
+                                for(String s: listNameAndTitle)
                                 {
-                                    tempForename += " " + s;
+                                    //append a space and the value of s to tempForename
+                                    tempForename.append(" ").append(s);
                                 }//for
 
-                                tempForename = tempForename.trim();
-
-                                tempCouncillor.setOfficialForename(tempForename);
+                                //calling setOfficialForename on tempForename toString
+                                tempCouncillor.setOfficialForename(tempForename.toString());
                             }//if
+                            //else
                             else
                             {
+                                //calling setOfficialForename on first index position of listNameAndTitle
                                 tempCouncillor.setOfficialForename(listNameAndTitle.get(0));
                             }//else
 
+                            //calling setUsualForename on return of getOfficialForename method
                             tempCouncillor.setUsualForename(tempCouncillor.getOfficialForename());
 
+                            //for instances of the 3rd paragraph in Councillor element
                             for(Element address : councillor.select("p:nth-child(3)"))
                             {
+                                //calling address1FromCSSSelectedParagraph to set values for Address 1 variables
                                 address1FromCSSSelectedParagraph(webpage,address.cssSelector(),tempCouncillor);
                             }//for
 
-                            tempCouncillor.setPhone1(councillor.select("strong:matchesOwn(Tel:)").next().text().replace(" ",""));
+                            //calling setPhone1 method on next text after strong tag "Tel:" removing blank space
+                            tempCouncillor.setPhone1(councillor.select("strong:matchesOwn(Tel:)").next().text()
+                                  .replace(" ",""));
 
-                            tempCouncillor.setEmail1(councillor.select("a.btn-outline").attr("href").replace("mailto:",""));
+                            //calling setEmail1 on the href attribute of "a.btn-outline" removing "mailto:"
+                            tempCouncillor.setEmail1(councillor.select("a.btn-outline").attr("href")
+                                  .replace("mailto:",""));
 
+                            //calling removeCommasFromAddress1 to remove commas from Address 1 variables
                             tempCouncillor.removeCommasFromAddress1();
 
+                            //adding tempCouncillor to councillors
                             councillors.add(tempCouncillor);
                         }//if
                     }//for
                 }//for
             }//for
 
+            //for loop for each white wrapper representing all the odd numbered DEAs on the site
             for(Element dEA : repList.select("div.wrapper-grey"))
             {
-                final String DEA_NAME = dEA.select("h2.title-main.blue").text().replace("DEA Councillors","").trim();
+                /*
+                declaring a constant string of the DEA name found by selecting the title for the wrapper minus the
+                non-DEA bits of the String
+                 */
+                final String DEA_NAME = dEA.select("h2.title-main.blue").text().replace
+                      (" DEA Councillors","").trim();
 
+                //for each cell containing a councillor's details
                 for(Element councillor: dEA.select("div.cell"))
                 {
+                    //for the Element with the tag p.title
                     for(Element p: councillor.select("p.title"))
                     {
+                        //if p.text is not empty
                         if(p.text().length()>0)
                         {
+                            //declare a temporary ElectedRep, tempCouncillor
                             ElectedRep tempCouncillor = new ElectedRep();
 
+                            //using the setElectedBody and setElectoralArea methods with related constants as parameters
                             tempCouncillor.setElectedBody(COUNCIL);
                             tempCouncillor.setElectoralArea(DEA_NAME);
 
-                            tempCouncillor.setParty(councillor.select("span").text());
+                            //calling the setParty method on the text of the span element of p
+                            tempCouncillor.setParty(p.select("span").text());
 
-                            String[] splitNameAndTitle = councillor.select("p.title").text().replace(tempCouncillor.getParty(),"").trim().split(" ");
+                            //declaring String array for the split value of p.text minus the return of getParty
+                            String[] splitNameAndTitle = p.text().replace(tempCouncillor.getParty(),"")
+                                  .trim().split(" ");
 
+                            //declaring a LinkedList of Strings to hold the name and title
                             LinkedList<String> listNameAndTitle = new LinkedList<>();
 
+                            //calling Collections.addAll to add all values from splitNameAndTitle to listNameAndTitle
                             Collections.addAll(listNameAndTitle,splitNameAndTitle);
 
+                            //temporary solution for postNominal - replace with list of common postNominals
                             while(!(listNameAndTitle.get(listNameAndTitle.size()-1).length() > 3))
                             {
-                                tempCouncillor.setPostNominal(tempCouncillor.getPostNominal() + " " + listNameAndTitle.get(listNameAndTitle.size()-1));
+                                tempCouncillor.setPostNominal(tempCouncillor.getPostNominal() + " " + listNameAndTitle
+                                      .get(listNameAndTitle.size()-1));
 
                                 listNameAndTitle.remove(listNameAndTitle.get(listNameAndTitle.size()-1));
                             }//if
 
-                            tempCouncillor.setPostNominal(tempCouncillor.getPostNominal().trim());
-
+                            //calling setTitle on the first index position of listNameAndTitle
                             tempCouncillor.setTitle(listNameAndTitle.get(0));
 
+                            //calling getTitle to remove title from listNameAndTitle
                             listNameAndTitle.remove(tempCouncillor.getTitle());
 
+                            //calling setOfficialSurname on the last index position of listNameAndTitle
                             tempCouncillor.setOfficialSurname(listNameAndTitle.get(listNameAndTitle.size()-1));
 
+                            //calling getOfficialSurname to remove the surname from listNameAndTitle
                             listNameAndTitle.remove(tempCouncillor.getOfficialSurname());
 
+                            //if listNameAndTitle is greater than 1
                             if(listNameAndTitle.size() > 1)
                             {
-                                String tempForename = "";
+                                //declaring StringBuild tempForename
+                                StringBuilder tempForename = new StringBuilder();
 
-                                for (String s : listNameAndTitle)
+                                //appending value in first index position of listNameAndTitle to tempForename
+                                tempForename.append(listNameAndTitle.get(0));
+
+                                //removing tempForename from listNameAndTitle
+                                listNameAndTitle.remove(tempForename.toString());
+
+                                //for the number of values remaining in listNameAndTitle
+                                for(String s: listNameAndTitle)
                                 {
-                                    tempForename += " " + s;
+                                    //append a space and the value of s to tempForename
+                                    tempForename.append(" ").append(s);
                                 }//for
 
-                                tempForename = tempForename.trim();
-
-                                tempCouncillor.setOfficialForename(tempForename);
+                                //calling setOfficialForename on tempForename toString
+                                tempCouncillor.setOfficialForename(tempForename.toString());
                             }//if
+                            //else
                             else
                             {
+                                //calling setOfficialForename on first index position of listNameAndTitle
                                 tempCouncillor.setOfficialForename(listNameAndTitle.get(0));
                             }//else
 
+                            //calling setUsualForename on return of getOfficialForename method
                             tempCouncillor.setUsualForename(tempCouncillor.getOfficialForename());
 
+                            //for instances of the 3rd paragraph in Councillor element
                             for(Element address : councillor.select("p:nth-child(3)"))
                             {
+                                //calling address1FromCSSSelectedParagraph to set values for Address 1 variables
                                 address1FromCSSSelectedParagraph(webpage,address.cssSelector(),tempCouncillor);
                             }//for
 
-                            tempCouncillor.setPhone1(councillor.select("strong:matchesOwn(Tel:)").next().text().replace(" ",""));
+                            //calling setPhone1 method on next text after strong tag "Tel:" removing blank space
+                            tempCouncillor.setPhone1(councillor.select("strong:matchesOwn(Tel:)").next().text()
+                                  .replace(" ",""));
 
-                            tempCouncillor.setEmail1(councillor.select("a.btn-outline").attr("href").replace("mailto:",""));
+                            //calling setEmail1 on the href attribute of "a.btn-outline" removing "mailto:"
+                            tempCouncillor.setEmail1(councillor.select("a.btn-outline").attr("href")
+                                  .replace("mailto:",""));
 
+                            //calling removeCommasFromAddress1 to remove commas from Address 1 variables
                             tempCouncillor.removeCommasFromAddress1();
 
+                            //adding tempCouncillor to councillors
                             councillors.add(tempCouncillor);
                         }//if
                     }//for
@@ -200,182 +282,7 @@ public class AAndNBC
             System.out.println(e);
         }//catch
 
-        //return membersOfParliament LinkedList
+        //return councillors LinkedList
         return councillors;
-    }//getNIMPs
-
-    //a repeatable method to load a LinkedList of Strings of NI Parliamentary Constituencies from a text file
-    private static LinkedList<String> getNIConstituencies()
-    {
-        //declaring a LinkedList constituencies to hold the String values of the NI constituencies
-        LinkedList<String> constituencies = new LinkedList();
-
-        //try block
-        try
-        {
-            //declaring a FileReader and a BufferedReader to read in a list of constituencies
-            FileReader fr = new FileReader("constituencies.txt");
-            BufferedReader br = new BufferedReader(fr);
-
-            /*
-            declaring an integer to hold the length of the file, and reading it with the Buffered Reader from the
-            header line
-             */
-            int length = Integer.parseInt(br.readLine());
-
-            //for loop iterating from 0 to one below the length of the file
-            for(int i = 0; i < length; i++)
-            {
-                //reading the next line in the buffered reader and adding to constituencies LinkedList
-                constituencies.add(br.readLine());
-            }//for
-        }//try
-        //catch block
-        catch(Exception e)
-        {
-            //print out exception
-            System.out.println(e);
-        }//catch
-
-        //return constituencies LinkedList
-        return constituencies;
-    }//getNIConstituencies
-
-    //a repeatable method to load a LinkedList of Strings of PreNominal Titles from a text file
-    private static LinkedList<String> getPreNominals()
-    {
-        //declaring a LinkedList constituencies to hold the String values of preNominals
-        LinkedList<String> preNoms = new LinkedList();
-
-        //try block
-        try
-        {
-            //declaring a FileReader and a BufferedReader to read in a list of constituencies
-            FileReader fr = new FileReader("preNoms.txt");
-            BufferedReader br = new BufferedReader(fr);
-
-            /*
-            declaring an integer to hold the length of the file, and reading it with the Buffered Reader from the
-            header line
-             */
-            int length = Integer.parseInt(br.readLine());
-
-            //for loop iterating from 0 to one below the length of the file
-            for(int i = 0; i < length; i++)
-            {
-                //reading the next line in the buffered reader and adding to preNoms LinkedList
-                preNoms.add(br.readLine());
-            }//for
-        }//try
-        //catch block
-        catch(Exception e)
-        {
-            //print out exception
-            System.out.println(e);
-        }//catch
-
-        //return preNoms LinkedList
-        return preNoms;
-    }//getPreNominals
-
-    //a repeatable method to return the ending of the search field for parliamentary constituencies
-    private static String getURLEnd(String constituencyName)
-    {
-        //return the constituency name with spaces replaced with +
-        return constituencyName.replace(" ","+");
-    }//getURLEnd
-
-    //a repeatable method to return an MP's details as an ElectedRep object from a formal parameter URL using jsoup
-    private ElectedRep mPFromURL(String mPURL,LinkedList<String> preNominalTitles)
-    {
-        //declaring a tempER Elected Rep to store the details of the MP
-        ElectedRep tempER = new ElectedRep();
-
-        //declaring constants to hold the job title and elected body title of MPs
-        final String ELECTED_BODY = "House of Commons";
-        final String JOB_TITLE = "Member of Parliament";
-
-        //try
-        try
-        {
-            //declaring a document webpage and taking a copy of the html by connecting to the mPURL
-            Document webpage = Jsoup.connect(mPURL).timeout(30*5000).userAgent("Mozilla").get();
-
-            /*
-            declaring a String to hold the fullNameAndTitle of the ElectedRep, calling the
-            stringFromFirstElementIfExists method on the webpage and css tag
-             */
-            String fullNameAndTitle = stringFromFirstElementIfExists(webpage,"#main-content > " +
-                  "div.container > article > div > div > div > div.heading > h2").replace("Contact ","");
-
-            //for the number of preNominalTitles in the LinkedList
-            for (String preNominalTitle : preNominalTitles)
-            {
-                //if fullNameAndTitle contains the preNominal in index position i
-                if (fullNameAndTitle.contains(preNominalTitle))
-                {
-                    //set tempER preNominal to preNominal in index position i
-                    tempER.setPreNominal(preNominalTitle);
-
-                    //remove preNominal in index position i from fullNameAndTitle and trim
-                    fullNameAndTitle = fullNameAndTitle.replace(preNominalTitle, "").trim();
-                }//if
-            }//for
-
-            //split fullNameAndTitle into a String of arrays splitNameAndTitle
-            String[] splitNameAndTitle = fullNameAndTitle.split(" ");
-
-            //set officialForename and usualForename of tempER to index position 0 of splitNameAndTitle
-            tempER.setOfficialForename(splitNameAndTitle[0]);
-            tempER.setUsualForename(splitNameAndTitle[0]);
-
-            //set officialSurname to last index position of splitNameAndTitle
-            tempER.setOfficialSurname(splitNameAndTitle[splitNameAndTitle.length-1]);
-
-            //call stringFromFirstElementIfExists on CSS selector to set preferred termOfAddress for tempER
-            tempER.setTermOfAddress(stringFromFirstElementIfExists(webpage,"#main-content > div.container > " +
-                  "article > div > div > div > p:nth-child(3) > strong"));
-
-            //set the ElectedBody and Title of tempER to their constant values
-            tempER.setElectedBody(ELECTED_BODY);
-            tempER.setTitle(JOB_TITLE);
-
-            //call address1FromCSSSelectedParagraph on CSS selector to intialise all Address 1 details for tempER
-            address1FromCSSSelectedParagraph(webpage, "#main-content > div.container > article > " +
-                  "div > div > div > div.sections > div > div:nth-child(1) > div > div.content > div.info > div > " +
-                  "div > div.col-md-5", tempER);
-
-            //call address2FromCSSSelectedParagraph on CSS selector to intialise all Address 2 details for tempER
-            address2FromCSSSelectedParagraph(webpage, "#main-content > div.container > article > div > " +
-                  "div > div > div.sections > div > div:nth-child(2) > div > div.content > div.info > div > div > " +
-                  "div.col-md-5", tempER);
-
-            //call attributeFromFirstElementIfExists on label "Phone:" to set phone1
-            tempER.setPhone1(attributeFromFirstElementIfExists(webpage,"span.label:matchesOwn(Phone:)").replace(" ",""));
-
-            //call attributeFromLastElementIfExists on label "Phone:" to set phone2
-            tempER.setPhone2(attributeFromLastElementIfExists(webpage,"span.label:matchesOwn(Phone:)").replace(" ",""));
-
-
-            //call attributeFromFirstElementIfExists on label "Email:" to set email1
-            tempER.setEmail1(attributeFromFirstElementIfExists(webpage,"span.label:matchesOwn(Email:)").replace(" ",""));
-
-            //call attributeFromLastElementIfExists on label "Email:" to set email2
-            tempER.setEmail2(attributeFromLastElementIfExists(webpage,"span.label:matchesOwn(Email:)").replace(" ",""));
-
-            //calling the removeDuplicateAddress, removeDuplicateEmail, and removeDuplicatePhone methods on tempER
-            tempER.removeDuplicateAddress();
-            tempER.removeDuplicateEmail();
-            tempER.removeDuplicatePhone();
-        }//try
-        //catch
-        catch (Exception e)
-        {
-            //print exception e
-            System.out.println(e);
-        }//catch
-
-        //return tempER
-        return tempER;
-    }//mPFromURL
+    }//getAAndNBCCouncillors
 }//class

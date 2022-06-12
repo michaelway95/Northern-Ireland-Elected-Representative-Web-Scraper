@@ -372,13 +372,13 @@ public class ElectedRep
 
     protected String toTSVLine()
     {
-        return getElectedBody().trim() + "\t" + getTitle().trim() + "\t" + getAltTitle().trim() + "\t" + getPreNominal().trim() + "\t" +
-              getOfficialForename().trim() + "\t" + getUsualForename().trim() + "\t" + getOfficialSurname().trim() + "\t" + getPostNominal().trim()
-              + "\t" + getTermOfAddress().trim() + "\t" + getParty().trim() + "\t" + getElectoralArea().trim() + "\t" + getAdd1Line1().trim() + "\t"
-              + getAdd1Line2().trim() + "\t" + getAdd1Line3().trim() + "\t" + getAdd1Line4().trim() + "\t" + getAdd1Line5().trim() + "\t" +
-              getAdd1Postcode().trim() + "\t" + getAdd2Line1().trim() + "\t" + getAdd2Line2().trim() + "\t" + getAdd2Line3().trim() + "\t" +
-              getAdd2Line4().trim() + "\t" + getAdd2Line5().trim() + "\t" + getAdd2Postcode().trim() + "\t" + getEmail1().trim() + "\t" +
-              getEmail2().trim() + "\t" + getPhone1().trim() + "\t" + getPhone2().trim();
+        return getElectedBody() + "\t" + getTitle() + "\t" + getAltTitle() + "\t" + getPreNominal() + "\t" +
+              getOfficialForename() + "\t" + getUsualForename() + "\t" + getOfficialSurname() + "\t" + getPostNominal()
+              + "\t" + getTermOfAddress() + "\t" + getParty() + "\t" + getElectoralArea() + "\t" + getAdd1Line1() + "\t"
+              + getAdd1Line2() + "\t" + getAdd1Line3() + "\t" + getAdd1Line4() + "\t" + getAdd1Line5() + "\t" +
+              getAdd1Postcode() + "\t" + getAdd2Line1() + "\t" + getAdd2Line2() + "\t" + getAdd2Line3() + "\t" +
+              getAdd2Line4() + "\t" + getAdd2Line5() + "\t" + getAdd2Postcode() + "\t" + getEmail1() + "\t" +
+              getEmail2() + "\t" + getPhone1() + "\t" + getPhone2();
     }//toTSVLine()
 
     protected void removeDuplicateAddress()
