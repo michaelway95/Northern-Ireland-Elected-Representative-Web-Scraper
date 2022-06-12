@@ -447,7 +447,6 @@ public class jsoupCSSParsingMethods
                 tempRep.setAdd1Postcode(listAddress.get(0).substring(listAddress.get(0).indexOf("BT")));
                 String tempAddress1 = listAddress.get(0).replace(tempRep.getAdd1Postcode(),"").trim();
                 String tempAddress2 = tempAddress1.substring(tempAddress1.indexOf("Room")+6);
-                System.out.println(tempAddress2);
                 tempAddress1 = tempAddress1.replace(tempAddress2,"");
                 tempRep.setAdd1Line1(tempAddress1.trim());
                 tempAddress1 = tempAddress2.trim();

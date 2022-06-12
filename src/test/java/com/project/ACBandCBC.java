@@ -54,7 +54,8 @@ public class ACBandCBC
                 for(Element councillor: Objects.requireNonNull(repList).select("div.council-wrap-inner"))
                 {
                     //for first instance of "a" Element for each councillor, return "href" attribute to their page
-                    councillorURLs.add(Objects.requireNonNull(Objects.requireNonNull(councillor.selectFirst("a")).attr("href")));
+                    councillorURLs.add(Objects.requireNonNull(Objects.requireNonNull(councillor
+                          .selectFirst("a")).attr("href")));
                 }//for
             }//try
             //catch block
@@ -158,26 +159,39 @@ public class ACBandCBC
 
             Element councillor = webpage.selectFirst("div.td-block-span6");
 
-            tempCouncillor.setParty(Objects.requireNonNull(Objects.requireNonNull(councillor).selectFirst("a")).text());
+            Elements altTitle = councillor.select("h5");
 
-            String dEAURL = Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(councillor.selectFirst("i.fa.fa-map-marker")).nextSibling()).nextSibling()).toString();
+            if(!altTitle.isEmpty())
+            {
+                tempCouncillor.setAltTitle(altTitle.select("strong").text());
+            }//if
 
-            tempCouncillor.setElectoralArea(dEAURL.substring(dEAURL.indexOf(">")+1).replace("</a>",""));
+            tempCouncillor.setParty(Objects.requireNonNull(Objects.requireNonNull(councillor)
+                  .selectFirst("a")).text());
 
-            tempCouncillor.setEmail1(councillor.selectFirst("a.mailto-link").selectFirst("span").ownText());
+            String dEAURL = Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(councillor
+                  .selectFirst("i.fa.fa-map-marker")).nextSibling()).nextSibling()).toString();
+
+            tempCouncillor.setElectoralArea(dEAURL.substring(dEAURL.indexOf(">")+1)
+                  .replace("</a>",""));
+
+            tempCouncillor.setEmail1(councillor.selectFirst("a.mailto-link").selectFirst("span")
+                  .ownText());
 
             Elements phone = councillor.select("i.fa.fa-phone");
 
             if(!phone.isEmpty())
             {
-                tempCouncillor.setPhone1(Objects.requireNonNull(Objects.requireNonNull(phone.first()).nextSibling()).toString().replace("Phone:","").replace(" ",""));
+                tempCouncillor.setPhone1(Objects.requireNonNull(Objects.requireNonNull(phone.first()).nextSibling())
+                      .toString().replace("Phone:","").replace(" ",""));
             }//if
 
             Elements mobile = councillor.select("i.fa.fa-mobile-phone");
 
             if(!mobile.isEmpty())
             {
-                tempCouncillor.setPhone1(Objects.requireNonNull(Objects.requireNonNull(mobile.first()).nextSibling()).toString().replace("Mobile:","").replace(" ",""));
+                tempCouncillor.setPhone1(Objects.requireNonNull(Objects.requireNonNull(mobile.first()).nextSibling())
+                      .toString().replace("Mobile:","").replace(" ",""));
             }//if
 
             Elements addressBreak = councillor.select("p:contains(Address)").select("br");
