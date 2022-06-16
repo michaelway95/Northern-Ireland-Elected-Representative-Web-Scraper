@@ -11,9 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="3690309b-ea42-4194-98e4-1a8050cc34dc" name="Changes" comment="HoC, NIA, AandN, ACBandC Functioning">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/ACBandCBC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/ACBandCBC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/allure-results/59de7eaf-cd8b-40f0-8aa7-2799df812b31-attachment.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/project/NIA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/NIA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/jsoupCSSParsingMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/jsoupCSSParsingMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/project/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/project/main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,19 +132,6 @@
       <option name="JAR_PATH" value="$PROJECT_DIR$/.idea/libraries/jsoup-1.15.1.jar" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="NIRepsWebScraper" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="NIRepsWebScraper" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.com.project.main" />
@@ -176,6 +163,7 @@
       <workItem from="1654514791971" duration="406000" />
       <workItem from="1654942247190" duration="34483000" />
       <workItem from="1655042064692" duration="25114000" />
+      <workItem from="1655068730278" duration="1707000" />
     </task>
     <task id="LOCAL-00001" summary="Assembly and HoC functioning">
       <created>1654975702917</created>
@@ -212,7 +200,14 @@
       <option name="project" value="LOCAL" />
       <updated>1655058532735</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="HoC, NIA, AandN, ACBandC Functioning">
+      <created>1655068747994</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1655068747994</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

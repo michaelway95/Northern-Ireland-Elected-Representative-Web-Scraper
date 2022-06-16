@@ -14,11 +14,14 @@ public class main
 {
     public static void main(String[] args)
     {
-        LinkedList<ElectedRep> electedReps = new ACBandCBC().getCouncillors();
-        //electedReps.addAll(new HoC().getMPs());
-        //electedReps.addAll(new NIA().getMLAs());
-        //electedReps.addAll(new AAndNBC().getCouncillors());
+        LinkedList<ElectedRep> electedReps = new LinkedList<>();
 
+        electedReps.addAll(new HoC().getMPs());
+
+        electedReps.addAll(new NIA().getMLAs());
+
+        electedReps.addAll(new AAndNBC().getCouncillors());
+        electedReps.addAll(new ACBandCBC().getCouncillors());
 
         for(int i = 0; i < electedReps.size(); i++)
         {

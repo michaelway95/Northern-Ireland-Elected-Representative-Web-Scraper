@@ -107,9 +107,11 @@ public class ACBandCBC
             //temporary solution for postNominal - replace with list of common postNominals
             while(!(listNameAndTitle.get(listNameAndTitle.size()-1).length() > 3))
             {
+                //set postNominal of tempCouncillor to the last valye in listNameAndTitle
                 tempCouncillor.setPostNominal(tempCouncillor.getPostNominal() + " " + listNameAndTitle
                       .get(listNameAndTitle.size()-1));
 
+                //removing last value from listNameAndTitle
                 listNameAndTitle.remove(listNameAndTitle.get(listNameAndTitle.size()-1));
             }//if
 
@@ -157,57 +159,90 @@ public class ACBandCBC
             //calling setUsualForename on return of getOfficialForename method
             tempCouncillor.setUsualForename(tempCouncillor.getOfficialForename());
 
+            //declaring Element councillor and selecting division of page with all contact details
             Element councillor = webpage.selectFirst("div.td-block-span6");
 
+            //declaring altTitle elements on CSS selector h5 within councillor Element
             Elements altTitle = councillor.select("h5");
 
+            //if altTitle elements is not empty
             if(!altTitle.isEmpty())
             {
+                //set altTitle of tempCouncillor to text associated with CSS selector "strong"
                 tempCouncillor.setAltTitle(altTitle.select("strong").text());
             }//if
 
+            //setParty to the text associated with first html anchor in councillor Element
             tempCouncillor.setParty(Objects.requireNonNull(Objects.requireNonNull(councillor)
                   .selectFirst("a")).text());
 
+            //declaring String dEAURL on second sibling of html map marker icon to String
             String dEAURL = Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(councillor
                   .selectFirst("i.fa.fa-map-marker")).nextSibling()).nextSibling()).toString();
 
+            //set tempCouncillor to the text contained within the first ">" and the second "<"
             tempCouncillor.setElectoralArea(dEAURL.substring(dEAURL.indexOf(">")+1)
                   .replace("</a>",""));
 
+            /*
+            email of councillor is encrypted. Creating pseudo email address using the url and multiple replace calls
+             */
             tempCouncillor.setEmail1(url
                   .replace("https://www.armaghbanbridgecraigavon.gov.uk/councillors/","")
                   .replace("councillor-","").replace("alderman-","")
                   .replace("-",".").replace("/","")
                   + "@armaghbanbridgecraigavon.gov.uk");
 
+            //declaring Elements phone for instances of html phone icon within Councillor element
             Elements phone = councillor.select("i.fa.fa-phone");
 
+            //if phone is not empty
             if(!phone.isEmpty())
             {
+                //set tempCouncillor phone1 to the string of the first sibling of phone replacing spaces and "Phone:"
                 tempCouncillor.setPhone1(Objects.requireNonNull(Objects.requireNonNull(phone.first()).nextSibling())
                       .toString().replace("Phone:","").replace(" ",""));
             }//if
 
+            //declaring Elements mobile for instances of html mobile phone icon within Councillor element
             Elements mobile = councillor.select("i.fa.fa-mobile-phone");
 
+            //if mobile is not empty
             if(!mobile.isEmpty())
             {
-                tempCouncillor.setPhone1(Objects.requireNonNull(Objects.requireNonNull(mobile.first()).nextSibling())
-                      .toString().replace("Mobile:","").replace(" ",""));
+                //if tempCouncillor phone1 is empty
+                if(tempCouncillor.getPhone1().equals(""))
+                {
+                    //set tempCouncillor phone1 to the string of the first sibling of mobile replacing spaces and "Mobile:"
+                    tempCouncillor.setPhone1(Objects.requireNonNull(Objects.requireNonNull(mobile.first()).nextSibling())
+                          .toString().replace("Mobile:","").replace(" ",""));
+                }//if
+                //else
+                else
+                {
+                    //set tempCouncillor phone2 to the string of the first sibling of mobile replacing spaces and "Mobile:"
+                    tempCouncillor.setPhone2(Objects.requireNonNull(Objects.requireNonNull(mobile.first()).nextSibling())
+                          .toString().replace("Mobile:","").replace(" ",""));
+                }//else
             }//if
 
+            //declaring Elements addressBreak for breaks within paragraphs containing "Address" in councillor
             Elements addressBreak = councillor.select("p:contains(Address)").select("br");
 
+            //declaring Elements postcodeBreak for 3rd break within paragraphs containing "Address" in councillor
             Elements postcodeBreak = councillor.select("p:contains(Address)").select("br:nth-child(3)");
 
+            //calling address1FromCSSSelectedParagraphWithCommas on addressBreak, postcodeBreak and tempCouncillor
             address1FromCSSSelectedParagraphWithCommas(addressBreak,postcodeBreak,tempCouncillor);
         }//try
+        //catch block
         catch (Exception e)
         {
+            //print exception e
             System.out.println(e);
         }//catch
 
+        //return tempCouncillor
         return tempCouncillor;
     }//councillorFromURL
 }//class
